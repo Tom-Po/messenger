@@ -2,18 +2,34 @@
 	import Avatar from "../Avatar.svelte";
 	import Input from "../forms/Input.svelte";
 	import searchIcon from '../../assets/icons/search.svg';
+    import {activeConversationIndex} from '../../stores/conversations.store.js';
 
-	let activeIndex = 0;
+	export let enforceSmall = false;
+	let activeIndex = null;
 
+    activeConversationIndex.subscribe(value => {
+			activeIndex = value;
+    })
 	const setActive = (id) => activeIndex = id;
+
+	let innerWidth = window.innerWidth;
+	let avatarSize = "medium";
+
+	$: enforceSmall = innerWidth < 990;
+	$: if(enforceSmall) {
+		avatarSize = 'small'
+    }
+
 </script>
+
+<svelte:window bind:innerWidth/>
 
 <div class="chat-list">
     <div class="chat-list-search">
         <Input placeholder="Search people" icon={searchIcon}/>
     </div>
     <div class="chat-list-item active" class:active={activeIndex === 0} on:click={()=>setActive(0)}>
-        <Avatar userName="Henri Mercier" size="medium"/>
+        <Avatar userName="Henri Mercier" size={avatarSize}/>
         <div class="content">
             <div class="from">David TheBrit</div>
             <div class="last">Bonjour, ouh lala</div>
@@ -25,7 +41,7 @@
 
     {#each Array(10) as user, index}
         <div class="chat-list-item" class:active={activeIndex === index + 1} on:click={()=>setActive(index + 1)}>
-            <Avatar avatar={"https://randomuser.me/api/portraits/men/3"+ index +".jpg"} size="medium"/>
+            <Avatar avatar={"https://randomuser.me/api/portraits/men/3"+ index +".jpg"} size={avatarSize}/>
             <div class="content">
                 <div class="from">David TheBrit</div>
                 <div class="last">Bonjour, ouh lala</div>

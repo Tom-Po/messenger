@@ -41,9 +41,25 @@
 {/if}
 
 <style>
-  .collapsed-leftbar {
-    width: 120px;
+
+  .leftbar {
+    width: 353px;
+    font-weight: 500;
+    flex-shrink: 0;
   }
+
+  .collapsed-leftbar {
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .leftbar,
+  .collapsed-leftbar {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
   .collapsed-leftbar :global(.chat-list) {
     padding-right: 0;
     padding-top: 20px;
@@ -55,7 +71,8 @@
   }
   .collapsed-leftbar :global(.user),
   .collapsed-leftbar :global(.user .avatar),
-  .collapsed-leftbar :global(.chat-list .avatar){
+  .collapsed-leftbar :global(.chat-list .avatar),
+  .collapsed-leftbar :global(.chat-list .chat-list-item) {
     margin: 0;
     padding: .5rem;
     justify-content: center;
@@ -69,15 +86,6 @@
   .collapsed-leftbar :global(.chat-list-item .content),
   .collapsed-leftbar :global(.chat-list-item .infos) {
     display: none;
-  }
-
-  .leftbar {
-    width: 353px;
-    font-weight: 500;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
   }
 
   .logo {

@@ -1,7 +1,7 @@
 <script>
 	import ChatViewHeader from "./ChatView/ChatViewHeader.svelte";
 	import Conversation from "./ChatView/Conversation.svelte";
-    import ChatInput from "./ChatView/ChatInput.svelte"
+    import ChatInput from "./ChatView/ChatInput.svelte";
 </script>
 
 <div class="chat-view">
