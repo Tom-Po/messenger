@@ -1,19 +1,46 @@
 <script>
 	import cog from '../../assets/icons/cog.svg';
-	import myFace from '../../assets/myface.jpeg';
 	import Avatar from "../Avatar.svelte";
+	import {user as activeUser} from "../../stores/conversations.store.js";
 
+	export let avatarSize = 'big'
+
+	let innerWidth = window.innerWidth;
+	let editMode = false;
+
+	$: innerWidth < 990 ? avatarSize = 'medium' : avatarSize = 'big';
+
+
+	let inputValue = '';
+	let avatar = '';
+
+	const submit = (event) => {
+		if (event.key === 'Enter') {
+			$activeUser = {
+				userName: inputValue,
+				avatar: avatar
+			}
+		}
+	}
+	const setEditMode = () => editMode = !editMode
 </script>
 
+<svelte:window bind:innerWidth/>
+
 <div class="user">
-    <Avatar avatar={myFace} size="big"/>
+    <Avatar avatar={$activeUser.avatar} size={avatarSize}/>
     <div class="user-infos">
-        <div class="user-name">Tom Poidevin</div>
-        <div class="user-role">Front-End Dev / UX Designer</div>
-        <div class="user-status">Online</div>
+        {#if !editMode}
+            <div class="user-name">{$activeUser.userName}</div>
+            <div class="user-role">Front-End Dev / UX Designer</div>
+            <div class="user-status">Online</div>
+        {:else}
+            <input type="text" bind:value={inputValue} on:keypress={submit} placeholder="User name"/>
+            <input type="text" bind:value={avatar} on:keypress={submit} placeholder="Avatar"/>
+        {/if}
     </div>
     <div class="user-actions">
-        <img src={cog} alt="Settings">
+        <div class="user-action"><img src={cog} alt="Settings" on:click={setEditMode}></div>
     </div>
 </div>
 
@@ -52,5 +79,9 @@
 
   .user-status {
     color: var(--success);
+  }
+
+  .user-action {
+    cursor: pointer;
   }
 </style>

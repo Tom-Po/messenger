@@ -1,87 +1,39 @@
 <script>
 	import Avatar from "../Avatar.svelte";
-	import BackToTop from "../BackToTop.svelte";
+    import {user as activeUser} from "../../stores/conversations.store.js";
+
+    export let messages = [];
+
+    let prevMessages = [];
+	let container;
+
+	function scrollIntoView() {
+		setTimeout(() => {
+			container.scroll({top: container.scrollHeight, behavior: 'smooth'})
+		}, 200)
+	}
+
+	$: if(prevMessages !== messages) {
+		scrollIntoView();
+    }
 </script>
 
-<div class="conversation">
-    <div class="message-group">
-        <div class="user-avatar">
-            <Avatar avatar={"https://randomuser.me/api/portraits/men/3.jpg"}/>
-        </div>
-        <div class="message-content">
-            <div class="message-content-item">Hello Tom</div>
-            <div class="message-content-item">How is it going with feature #123 ?</div>
-            <div class="message-content-item"> I expect it to be done by noon</div>
-            <div class="message-content-item">Here's a reminder, just in case : Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit. Accusamus animi aspernatur, blanditiis, distinctio dolorem error est
-                excepturi hic ipsa nesciunt nihil odit omnis quaerat quod sunt tempora unde vero vitae?
+<div class="conversation" bind:this={container}>
+    {#each messages as message}
+        <div class="message-group" class:message-group-user={message.from.username === $activeUser.userName}>
+            <div class="user-avatar">
+                <Avatar avatar={message.from.avatar}/>
             </div>
-            <span class="message-at">09:35</span>
-        </div>
-    </div>
-    <div class="message-group message-group-user">
-        <div class="user-avatar">
-            <Avatar avatar={"https://randomuser.me/api/portraits/men/7.jpg"}/>
-        </div>
-        <div class="message-content">
-            <div class="message-content-item">Hey Jerry</div>
-            <div class="message-content-item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias
-                architecto facere labore quasi quisquam repellat. Amet aspernatur atque eligendi eveniet, ex fugiat
-                laborum minima numquam officiis porro reiciendis sunt voluptatum.
+            <div class="message-content">
+                {#each message.content.lines as line, index}
+                    <div class="message-content-item" style="--min-width: {line.length < 40 ? line.length + 'ch' : '0px'}">{line}</div>
+                    {#if message.content.lines.length === 1 || index === message.content.lines.length -1 }
+                        <span class="message-at">{message.content.at}</span>
+                    {/if}
+                {/each}
             </div>
-            <div class="message-content-item">Go fuck yourself, sincerely yours</div>
-            <span class="message-at">09:36</span>
         </div>
-    </div>
-    <div class="message-group">
-        <div class="user-avatar">
-            <Avatar avatar={"https://randomuser.me/api/portraits/men/3.jpg"}/>
-        </div>
-        <div class="message-content">
-            <div class="message-content-item">Will do thanks for the advice Tom</div>
-            <div class="message-content-item">Here's a reminder, just in case : Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit. Accusamus animi aspernatur, blanditiis, distinctio dolorem error est
-                excepturi hic ipsa nesciunt nihil odit omnis quaerat quod sunt tempora unde vero vitae?
-            </div>
-            <span class="message-at">09:39</span>
-        </div>
-    </div>
-    <div class="message-group">
-        <div class="user-avatar">
-            <Avatar avatar={"https://randomuser.me/api/portraits/men/3.jpg"}/>
-        </div>
-        <div class="message-content">
-            <div class="message-content-item">Will do thanks for the advice Tom</div>
-            <div class="message-content-item">Here's a reminder, just in case : Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit. Accusamus animi aspernatur, blanditiis, distinctio dolorem error est
-                excepturi hic ipsa nesciunt nihil odit omnis quaerat quod sunt tempora unde vero vitae?
-            </div>
-            <div class="message-content-item">Here's a reminder, just in case : Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit. Accusamus animi aspernatur, blanditiis, distinctio dolorem error est
-                excepturi hic ipsa nesciunt nihil odit omnis quaerat quod sunt tempora unde vero vitae?
-            </div>
-            <div class="message-content-item">Here's a reminder, just in case : Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit. Accusamus animi aspernatur, blanditiis, distinctio dolorem error est
-                excepturi hic ipsa nesciunt nihil odit omnis quaerat quod sunt tempora unde vero vitae?
-            </div>
-            <div class="message-content-item">Here's a reminder, just in case : Lorem ipsum dolor sit amet,
-                consectetur adipisicing elit. Accusamus animi aspernatur, blanditiis, distinctio dolorem error est
-                excepturi hic ipsa nesciunt nihil odit omnis quaerat quod sunt tempora unde vero vitae?
-            </div>
-            <span class="message-at">09:39</span>
-        </div>
-    </div>
-    <div class="message-group message-group-user">
-        <div class="user-avatar">
-            <Avatar avatar={"https://randomuser.me/api/portraits/men/7.jpg"}/>
-        </div>
-        <div class="message-content">
-            <div class="message-content-item">You fuckin nuts Jerry</div>
-            <div class="message-content-item read">Dont touch my PR on # 1234, I dare you</div>
-            <span class="message-at">10:01</span>
-        </div>
-    </div>
-    <BackToTop/>
+    {/each}
 </div>
 
 <style>
@@ -92,12 +44,15 @@
     display: flex;
     flex-direction: column;
     margin-right: 5px;
-    padding: 50px 17px 0 24px;
-    line-height: 17px;
+    padding: 34px 17px 0 24px;
+    line-height: 16px;
   }
 
   .message-group {
     display: flex;
+    opacity: .2;
+    animation: fadeIn 300ms ease-in-out forwards;
+    animation-delay: 300ms;
   }
 
   .message-content {
@@ -119,6 +74,7 @@
     color: var(--dark-grey);
     border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
     padding: 12px 20px;
+    min-width: var(--min-width);
   }
 
   .message-content-item:first-of-type {
@@ -169,6 +125,15 @@
     order: 2;
     margin-right: 0;
     margin-left: 18px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: .2;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   @media screen and (min-width: 990px) {

@@ -15,7 +15,6 @@
 	} else if (size === 'medium') {
 		avatarSize = '50px'
 	}
-
 </script>
 
 <div class="avatar" style='--avatarSize: {avatarSize}'>

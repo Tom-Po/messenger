@@ -1,11 +1,30 @@
 <script>
+	import {createEventDispatcher} from 'svelte';
+
 	export let value = '';
 	export let placeholder = 'Type some text'
 	export let icon = null;
+
+	const dispatch = createEventDispatcher();
+
+	function updateValue() {
+		if (value === '') return;
+		dispatch('change', {
+			value
+		})
+	}
+
+	function submitValue(){
+        if (value === '') return;
+        dispatch('submit', {
+            value
+        })
+        value = ''
+    }
 </script>
 
 <div class="input-wrapper">
-    <input type="text" bind:value={value} placeholder={placeholder}>
+    <input type="text" bind:value={value} on:input={updateValue} on:submit={submitValue} placeholder={placeholder}>
     {#if icon}
         <img src={icon} alt="Input icon">
     {/if}

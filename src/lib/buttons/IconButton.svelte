@@ -6,14 +6,9 @@
     const success = type === 'success'
     const light = type === 'light'
     const danger = type === 'danger'
-
-	export let onClick = () => {
-		console.log("clicked")
-    };
-
 </script>
 
-<div class="icon-wrapper" class:success class:light class:danger on:click={()=> onClick()}>
+<div class="icon-wrapper" class:success class:light class:danger>
     <img src={src} alt={name}>
 </div>
 

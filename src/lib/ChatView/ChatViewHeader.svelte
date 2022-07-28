@@ -16,6 +16,7 @@
     border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1rem;
   }
 
   h1 {

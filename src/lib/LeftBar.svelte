@@ -8,7 +8,8 @@
 
 	let innerWidth = window.innerWidth;
 
-	$: innerWidth < 990 ? show = false : show = true;
+	$: innerWidth < 768 ? show = false : show = true;
+
 </script>
 
 <svelte:window bind:innerWidth/>
@@ -53,6 +54,11 @@
     flex-shrink: 0;
   }
 
+  .collapsed-leftbar :global(.user) {
+    height: 81px;
+  }
+
+
   .leftbar,
   .collapsed-leftbar {
     overflow: hidden;
@@ -66,9 +72,11 @@
     justify-content: center;
     align-items: center;
   }
+
   .collapsed-leftbar :global(.user) {
     border-bottom: 1px solid var(--border-color);
   }
+
   .collapsed-leftbar :global(.user),
   .collapsed-leftbar :global(.user .avatar),
   .collapsed-leftbar :global(.chat-list .avatar),
@@ -81,6 +89,7 @@
   .collapsed-leftbar :global(.user div:not(.avatar)) {
     margin: 0;
   }
+
   .collapsed-leftbar :global(.user div:not(.avatar)),
   .collapsed-leftbar :global(.chat-list-search),
   .collapsed-leftbar :global(.chat-list-item .content),

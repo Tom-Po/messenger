@@ -6,7 +6,6 @@
 	$: setTimeout(()=> {
 			showSidebar = true
     }, 1000)
-    console.log(showSidebar)
 </script>
 
 <main>

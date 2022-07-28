@@ -10,9 +10,10 @@
     activeConversationIndex.subscribe(value => {
 			activeIndex = value;
     })
-	const setActive = (id) => activeIndex = id;
 
-	let innerWidth = window.innerWidth;
+	const setActive = (id) => activeConversationIndex.update(index => index = id);
+
+	let innerWidth = window.innerWidth ;
 	let avatarSize = "medium";
 
 	$: enforceSmall = innerWidth < 990;
