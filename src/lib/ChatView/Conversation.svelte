@@ -1,6 +1,6 @@
 <script>
 	import Avatar from "../Avatar.svelte";
-    import {user as activeUser} from "../../stores/conversations.store.js";
+    import {user as activeUser} from "../../stores/wsMessageStore.js";
 
     export let messages = [];
 
@@ -16,24 +16,30 @@
 	$: if(prevMessages !== messages) {
 		scrollIntoView();
     }
+		console.log(messages)
 </script>
 
 <div class="conversation" bind:this={container}>
-    {#each messages as message}
-        <div class="message-group" class:message-group-user={message.from.username === $activeUser.userName}>
-            <div class="user-avatar">
-                <Avatar avatar={message.from.avatar}/>
+    {#if !messages.length || !messages}
+        <div>Aucun message à afficher, démarrer une conversation</div>
+    {:else}
+        {#each messages as message}
+            <div class="message-group" class:message-group-user={message.from.id === $activeUser.id}>
+                <div class="user-avatar">
+                    <Avatar avatar={message.from.avatar}/>
+                </div>
+                <div class="message-content">
+                    {#each message.content.lines as line, index}
+                        <div class="message-content-item" style="--min-width: {line.length < 40 ? line.length + 'ch' : '0px'}">{line}</div>
+                        {#if message.content.lines.length === 1 || index === message.content.lines.length -1 }
+                            <span class="message-at">{message.content.at}</span>
+                        {/if}
+                    {/each}
+                </div>
             </div>
-            <div class="message-content">
-                {#each message.content.lines as line, index}
-                    <div class="message-content-item" style="--min-width: {line.length < 40 ? line.length + 'ch' : '0px'}">{line}</div>
-                    {#if message.content.lines.length === 1 || index === message.content.lines.length -1 }
-                        <span class="message-at">{message.content.at}</span>
-                    {/if}
-                {/each}
-            </div>
-        </div>
-    {/each}
+        {/each}
+    {/if}
+
 </div>
 
 <style>

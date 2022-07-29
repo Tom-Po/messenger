@@ -4,7 +4,7 @@
 	import ChatList from "./Leftbar/ChatList.svelte";
 	import {fly, fade} from "svelte/transition"
 
-	export let show = true
+	export let show = false
 
 	let innerWidth = window.innerWidth;
 

@@ -3,9 +3,8 @@
 	import ArrowSend from '../../assets/icons/arrow-send.svg';
 	import Emoticons from '../../assets/icons/emoticons.svg';
 	import JoinFile from '../../assets/icons/join.svg';
-	import userAvatar from "../../assets/myface.jpeg";
 
-	import {user as activeUser} from "../../stores/conversations.store.js";
+	import {user} from "../../stores/wsMessageStore.js";
 
 	import {createEventDispatcher} from 'svelte';
 
@@ -22,12 +21,13 @@
 		dispatch('message', {
 			id: 123,
 			from: {
-				avatar: $activeUser.avatar,
-				username: $activeUser.userName,
+				avatar: $user.avatar,
+				username: $user.userName,
+                id: $user.id,
 			},
 			content: {
 				lines: [
-					inputValue + " - " + $activeUser.userName
+					inputValue + " - " + $user.userName
 				],
 				at: currentTime.getHours() + ':' + (currentTime.getMinutes() < 10 ? '0' : '') + currentTime.getMinutes()
 			}

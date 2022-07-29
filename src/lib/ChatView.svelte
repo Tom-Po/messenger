@@ -2,48 +2,27 @@
 	import ChatViewHeader from "./ChatView/ChatViewHeader.svelte";
 	import Conversation from "./ChatView/Conversation.svelte";
 	import ChatInput from "./ChatView/ChatInput.svelte";
-	import {conversation} from "../stores/conversations.store.js";
-	import {user as activeUser} from "../stores/conversations.store.js";
-    import {onMount} from 'svelte';
+	import {onMount} from 'svelte';
+	import store from '../stores/wsMessageStore.js';
 
-	const url = "ws://localhost:5444"
-	const wss = new WebSocket(url)
+	let messages = [];
 
-	function addMessage(message) {
-		let messages = $conversation;
-		const lastMessage = messages[messages.length - 1];
-		if (
-			(lastMessage.from.username === message.from.username
-				&& lastMessage.from.username === $activeUser.userName)
-			|| (lastMessage.from.username === message.from.username)) {
-			messages[messages.length - 1].content = {
-				lines: [
-					...lastMessage.content.lines,
-					...message.content.lines
-				],
-				at: message.content.at,
-			}
-		} else {
-			messages = [...messages, message]
-		}
-		$conversation = messages
-	}
-
-	//handling message event
-	wss.onmessage = function (event) {
-		const {data} = event
-		addMessage(JSON.parse(data))
-	}
+	onMount(() => {
+		store.subscribe(currentMessages => {
+			if (!currentMessages || !currentMessages.length) return;
+			messages = currentMessages
+		})
+	})
 
 	const sendMessage = (event) => {
-		wss.send(JSON.stringify(event.detail))
-        // addMessage(event.detail)
+		store.sendMessage(JSON.stringify(event.detail))
 	}
+
 </script>
 
 <div class="chat-view">
     <ChatViewHeader/>
-    <Conversation messages={$conversation}/>
+    <Conversation messages={messages}/>
     <ChatInput on:message={sendMessage}/>
 </div>
 

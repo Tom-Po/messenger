@@ -3,7 +3,7 @@
 </script>
 
 <div class="chat-view-header">
-    <h1>Jerry</h1>
+    <h1>Channel #1</h1>
     <div class="chat-view-header-avatar">
         <Avatar avatar={"https://randomuser.me/api/portraits/men/3.jpg"}/>
     </div>

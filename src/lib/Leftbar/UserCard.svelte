@@ -1,7 +1,7 @@
 <script>
 	import cog from '../../assets/icons/cog.svg';
 	import Avatar from "../Avatar.svelte";
-	import {user as activeUser} from "../../stores/conversations.store.js";
+	import {user} from "../../stores/wsMessageStore.js";
 
 	export let avatarSize = 'big'
 
@@ -16,7 +16,8 @@
 
 	const submit = (event) => {
 		if (event.key === 'Enter') {
-			$activeUser = {
+			$user = {
+				...$user,
 				userName: inputValue,
 				avatar: avatar
 			}
@@ -28,10 +29,10 @@
 <svelte:window bind:innerWidth/>
 
 <div class="user">
-    <Avatar avatar={$activeUser.avatar} size={avatarSize}/>
+    <Avatar avatar={$user.avatar} size={avatarSize}/>
     <div class="user-infos">
         {#if !editMode}
-            <div class="user-name">{$activeUser.userName}</div>
+            <div class="user-name">{$user.userName} - ID : {$user.id}</div>
             <div class="user-role">Front-End Dev / UX Designer</div>
             <div class="user-status">Online</div>
         {:else}
